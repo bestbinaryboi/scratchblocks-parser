@@ -1,0 +1,28 @@
+name: Cleanup Files
+
+on:
+  workflow_dispatch  # Manually trigger from GitHub UI
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Remove rendering and website files
+        run: |
+          rm -rf scratch2/
+          rm -rf scratch3/
+          rm -rf snapshots/
+          rm -f index.html index.css index.js browser.js browser.es.js
+      
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Remove image generation and website code, keep only parsing backend"
+          git push
